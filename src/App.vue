@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import orderIndex from '@/view/orderIndex/orderIndex'
+import orderIndex from '@/views/orderIndex/orderIndex'
 
 export default {
   name: 'App',
@@ -15,6 +15,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang='scss'>
+@import url('@/style/base.css');
+#app{
+  height: 100vh;
+}
 </style>
