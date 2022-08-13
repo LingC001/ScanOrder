@@ -1,16 +1,12 @@
 <template>
   <div id="app">
-    <order-index />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import OrderIndex from "@/views/orderIndex/orderIndex.vue";
 export default {
   name: "App",
-  components: {
-    OrderIndex,
-  },
 };
 </script>
 
