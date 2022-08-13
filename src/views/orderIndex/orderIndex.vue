@@ -84,7 +84,7 @@ $m-color2: #fc9904;
 .orderIndex {
   height: 100%;
   overflow: hidden;
-  background-image: url("../../assets/images/res.png");
+  background-image: url("../../assets/images/background.png");
   .logo {
     height: 10vw;
     display: flex;
@@ -143,7 +143,6 @@ $m-color2: #fc9904;
       .active {
         background-color: $m-color2;
         width: 50px;
-        color: #fff;
         line-height: 30px;
         text-align: center;
         border-radius: 50px;

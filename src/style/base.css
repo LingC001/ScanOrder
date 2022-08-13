@@ -71,6 +71,11 @@ input {
   content: "";
   display: table;
 }
+
 .clearfix::after {
   clear: both;
+}
+
+* {
+  box-sizing: border-box;
 }
