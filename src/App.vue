@@ -5,19 +5,18 @@
 </template>
 
 <script>
-import orderIndex from '@/views/orderIndex/orderIndex'
-
+import OrderIndex from "@/views/orderIndex/orderIndex.vue";
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    orderIndex
-  }
-}
+    OrderIndex,
+  },
+};
 </script>
 
 <style lang='scss'>
-@import url('@/style/base.css');
-#app{
+@import url("@/style/base.css");
+#app {
   height: 100vh;
 }
 </style>

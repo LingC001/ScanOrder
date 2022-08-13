@@ -11,13 +11,9 @@
       <h5>客官，您几位？</h5>
       <p>桌号：31</p>
       <ul>
-        <li class="active">1人</li>
-        <li>2人</li>
-        <li>3人</li>
-        <li>4人</li>
-        <li>5人</li>
+        <li v-for="(item, index) in numList" :key="index" :class="{active:item.isActive}" @click="selectChange(item.num)">{{item.num}}人</li> 
       </ul>
-      <div class="order">开始点餐</div>
+      <div class="order" @click="choose">开始点餐</div>
     </div>
 
     <div class="footer">美团餐饮系统提供技术支持</div>
@@ -25,7 +21,51 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name:'orderIndex',
+  data(){
+    return {
+      numList:[
+        {
+          num:1,
+          isActive:true
+        },
+          {
+          num:2,
+           isActive:false
+        },
+          {
+          num:3,
+          isActive:false
+        },
+          {
+          num:4,
+          isActive:false
+        },
+          {
+          num:5,
+          isActive:false
+        },
+      ]
+    }
+  },
+  methods:{
+    selectChange(current){
+      console.log('点击了',current);
+      this.numList = this.numList.map(i=>{
+        if(i.num === current){
+          i.isActive = true
+        }else{
+          i.isActive = false
+        }
+        return i
+      })
+    },
+    choose(){
+      this.$router.push('/choose')
+    }
+  }
+};
 </script>
 
 <style lang='scss' scoped>
