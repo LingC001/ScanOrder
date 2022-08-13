@@ -11,7 +11,14 @@
       <h5>客官，您几位？</h5>
       <p>桌号：31</p>
       <ul>
-        <li v-for="(item, index) in numList" :key="index" :class="{active:item.isActive}" @click="selectChange(item.num)">{{item.num}}人</li> 
+        <li
+          v-for="(item, index) in numList"
+          :key="index"
+          :class="{ active: item.isActive }"
+          @click="selectChange(item.num)"
+        >
+          {{ item.num }}人
+        </li>
       </ul>
       <div class="order" @click="choose">开始点餐</div>
     </div>
@@ -22,49 +29,49 @@
 
 <script>
 export default {
-  name:'orderIndex',
-  data(){
+  name: "orderIndex",
+  data() {
     return {
-      numList:[
+      numList: [
         {
-          num:1,
-          isActive:true
+          num: 1,
+          isActive: true,
         },
-          {
-          num:2,
-           isActive:false
+        {
+          num: 2,
+          isActive: false,
         },
-          {
-          num:3,
-          isActive:false
+        {
+          num: 3,
+          isActive: false,
         },
-          {
-          num:4,
-          isActive:false
+        {
+          num: 4,
+          isActive: false,
         },
-          {
-          num:5,
-          isActive:false
+        {
+          num: 5,
+          isActive: false,
         },
-      ]
-    }
+      ],
+    };
   },
-  methods:{
-    selectChange(current){
-      console.log('点击了',current);
-      this.numList = this.numList.map(i=>{
-        if(i.num === current){
-          i.isActive = true
-        }else{
-          i.isActive = false
+  methods: {
+    selectChange(current) {
+      console.log("点击了", current);
+      this.numList = this.numList.map((i) => {
+        if (i.num === current) {
+          i.isActive = true;
+        } else {
+          i.isActive = false;
         }
-        return i
-      })
+        return i;
+      });
     },
-    choose(){
-      this.$router.push('/choose')
-    }
-  }
+    choose() {
+      this.$router.push("/choose");
+    },
+  },
 };
 </script>
 
@@ -134,7 +141,7 @@ $m-color2: #fc9904;
       height: 30px;
       padding-top: 18%;
       .active {
-        background-color:$m-color2;
+        background-color: $m-color2;
         width: 50px;
         color: #fff;
         line-height: 30px;
