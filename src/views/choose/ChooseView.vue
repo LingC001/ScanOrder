@@ -20,55 +20,17 @@
     </div>
     <div class="recommends">
       <div class="all-box">
-        <div class="food-box">
+        <div
+          class="food-box"
+          v-for="(item, index) in recommendList"
+          :key="index"
+        >
           <div class="pic">
-            <img
-              :src="require('@/assets/images/foods/chicken feet.png')"
-              alt=""
-            />
+            <img :src="item.image" @click="viewImage(item.image)" />
           </div>
           <div class="title">
-            <div>招牌凤爪</div>
-            <div class="price"><span>￥</span>58</div>
-            <div class="add">＋</div>
-          </div>
-        </div>
-        <div class="food-box">
-          <div class="pic">
-            <img
-              :src="require('@/assets/images/foods/chicken feet.png')"
-              alt=""
-            />
-          </div>
-          <div class="title">
-            <div>招牌凤爪</div>
-            <div class="price"><span>￥</span>58</div>
-            <div class="add">＋</div>
-          </div>
-        </div>
-        <div class="food-box">
-          <div class="pic">
-            <img
-              :src="require('@/assets/images/foods/chicken feet.png')"
-              alt=""
-            />
-          </div>
-          <div class="title">
-            <div>招牌凤爪</div>
-            <div class="price"><span>￥</span>58</div>
-            <div class="add">＋</div>
-          </div>
-        </div>
-        <div class="food-box">
-          <div class="pic">
-            <img
-              :src="require('@/assets/images/foods/chicken feet.png')"
-              alt=""
-            />
-          </div>
-          <div class="title">
-            <div>招牌凤爪</div>
-            <div class="price"><span>￥</span>58</div>
+            <div>{{ item.name }}</div>
+            <div class="price"><span>￥</span>{{ item.price }}</div>
             <div class="add">＋</div>
           </div>
         </div>
@@ -76,80 +38,17 @@
     </div>
     <div class="goods">
       <div class="g-left">
-        <div>纸巾</div>
-        <div class="active">推荐菜</div>
-        <div>烧烤</div>
-        <div>特色菜</div>
-        <div>特色菜</div>
-        <div>特色菜</div>
-        <div>特色菜</div>
-        <div>特色菜</div>
-        <div>特色菜</div>
-        <div>特色菜</div>
+        <div v-for="(item, index) in category" :key="index">{{ item }}</div>
       </div>
       <div class="g-right">
-        <div class="green">
-          <img
-            :src="require('@/assets/images/foods/chicken feet.png')"
-            alt=""
-          />
+        <div class="green" v-for="(item, index) in foodlist" :key="index">
+          <img :src="item.image" />
           <div class="discribe">
-            <div class="d-1">纸巾</div>
+            <div class="d-1">{{ item.name }}</div>
             <div class="d-bot">
               <div class="d-2">
                 <span>￥</span>
-                <span>1</span>
-                <span class="des-1">/包</span>
-              </div>
-              <div class="add">＋</div>
-            </div>
-          </div>
-        </div>
-        <div class="green">
-          <img
-            :src="require('@/assets/images/foods/chicken feet.png')"
-            alt=""
-          />
-          <div class="discribe">
-            <div class="d-1">纸巾</div>
-            <div class="d-bot">
-              <div class="d-2">
-                <span>￥</span>
-                <span>1</span>
-                <span class="des-1">/包</span>
-              </div>
-              <div class="add">＋</div>
-            </div>
-          </div>
-        </div>
-        <div class="green">
-          <img
-            :src="require('@/assets/images/foods/chicken feet.png')"
-            alt=""
-          />
-          <div class="discribe">
-            <div class="d-1">纸巾</div>
-            <div class="d-bot">
-              <div class="d-2">
-                <span>￥</span>
-                <span>1</span>
-                <span class="des-1">/包</span>
-              </div>
-              <div class="add">＋</div>
-            </div>
-          </div>
-        </div>
-        <div class="green">
-          <img
-            :src="require('@/assets/images/foods/chicken feet.png')"
-            alt=""
-          />
-          <div class="discribe">
-            <div class="d-1">纸巾</div>
-            <div class="d-bot">
-              <div class="d-2">
-                <span>￥</span>
-                <span>1</span>
+                <span>{{ item.price }}</span>
                 <span class="des-1">/包</span>
               </div>
               <div class="add">＋</div>
@@ -159,17 +58,103 @@
       </div>
     </div>
     <div class="footer">
-      <div class="buyBox"><i class="iconfont icon-gouwuche"></i></div>
+      <div class="buyBox" @click="showProducts">
+        <i class="iconfont icon-gouwuche"></i>
+      </div>
       <div class="product">未选购商品</div>
+      <div class="finish" @click="toPay">选好了</div>
+    </div>
+    <div class="b-frame" v-show="ifProductDetail">
+      <div class="top">
+        <span>已选三份</span>
+        <i class="iconfont icon-shanchu"></i>
+      </div>
+      <div class="body">
+        <div class="order">
+          <span>纸巾</span>
+          <span class="price">￥1</span>
+          <span class="num">
+            <span class="minus">－</span>
+            <span>1</span>
+            <span class="add">＋</span>
+          </span>
+        </div>
+        <div class="order">
+          <span>周黑鸭</span>
+          <span class="price">￥45</span>
+          <span class="num">
+            <span class="minus">－</span>
+            <span>1</span>
+            <span class="add">＋</span>
+          </span>
+        </div>
+        <div class="order">
+          <span>招牌凤爪</span>
+          <span class="price">￥55</span>
+          <span class="num">
+            <span class="minus">－</span>
+            <span>1</span>
+            <span class="add">＋</span>
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { ImagePreview } from "vant";
+import request from "@/utils/axios.js";
+
 export default {
+  data() {
+    return {
+      ifProductDetail: false,
+      category: null,
+      foodlist: [],
+      recommendList: [],
+    };
+  },
+  created() {
+    request.get("http://150.158.166.35/api/foods/").then((res) => {
+      // console.log(res);
+      let data = res.data;
+      console.log("data", data);
+      // 获取大类数据
+      let ca = data.map((i) => {
+        return i.category;
+      });
+      console.log("ca", ca);
+      let allCa = [...new Set(ca)];
+      console.log("allCa", allCa);
+      this.category = allCa;
+      // 获取纸巾大类下面所以商品
+      this.foodlist = data.filter((i) => {
+        return i.category === "纸巾";
+      });
+      console.log("this.foodlist", this.foodlist);
+      // 获取推荐商品
+      this.recommendList = data.filter((i) => {
+        return i.recommended === "true";
+      });
+      console.log("this.recommendList", this.recommendList);
+    });
+  },
   methods: {
     toShopDetail() {
       this.$router.push("/shopDetail");
+    },
+    viewImage(url) {
+      ImagePreview({
+        images: [url],
+        closeable: true,
+      });
+    },
+    showProducts() {
+      this.ifProductDetail = !this.ifProductDetail;
+    },
+    toPay() {
+      this.$router.push("/submitOrder");
     },
   },
 };
@@ -346,15 +331,19 @@ export default {
   .footer {
     $h: 45px;
     position: fixed;
-    left: 40px;
+    left: 50%;
     bottom: 15px;
-    width: 80%;
+    transform: translateX(-50%);
+    width: 90%;
     height: $h;
     background-color: #3b363a;
     overflow: hidden;
     border-radius: 50px;
     display: flex;
     align-items: center;
+    .finish {
+      color: #fff;
+    }
     .buyBox {
       width: $h;
       height: $h;
@@ -372,6 +361,64 @@ export default {
       color: #9b9599;
       font-size: 15px;
       margin-left: 20px;
+    }
+  }
+  .b-frame {
+    width: 90%;
+    padding: 10px;
+    background-color: #fff;
+    position: fixed;
+    left: 50%;
+    bottom: 70px;
+    transform: translateX(-50%);
+    box-shadow: 0px 0px 10px 1px #0707073d;
+    .top {
+      display: flex;
+      justify-content: space-between;
+      height: 50px;
+      line-height: 50px;
+      font-size: 13px;
+      border-bottom: 1px solid #9b9599;
+    }
+    .body {
+      padding-top: 15px;
+      width: 100%;
+      .order {
+        width: 100%;
+        font-size: 12px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        &:last-child {
+          margin-bottom: 0;
+        }
+        .price {
+          color: orange;
+        }
+        .num {
+          width: 70px;
+          display: flex;
+          justify-content: space-between;
+          .add {
+            width: 20px;
+            height: 20px;
+            color: #fff;
+            text-align: center;
+            line-height: 20px;
+            background-color: orange;
+            border-radius: 50px;
+          }
+          .minus {
+            width: 20px;
+            height: 20px;
+            color: black;
+            text-align: center;
+            line-height: 20px;
+            border: 1px solid #9b9599;
+            border-radius: 50px;
+          }
+        }
+      }
     }
   }
 }
