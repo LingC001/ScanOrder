@@ -139,7 +139,7 @@ $m-color2: #fc9904;
       justify-content: space-around;
       font-size: 5px;
       height: 30px;
-      padding-top: 18%;
+      margin-top: 18%;
       .active {
         background-color: $m-color2;
         width: 50px;
