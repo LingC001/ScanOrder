@@ -31,18 +31,25 @@
           <div class="title">
             <div>{{ item.name }}</div>
             <div class="price"><span>￥</span>{{ item.price }}</div>
-            <div class="add">＋</div>
+            <div class="add" @click="addCart(item)">＋</div>
           </div>
         </div>
       </div>
     </div>
     <div class="goods">
       <div class="g-left">
-        <div v-for="(item, index) in category" :key="index">{{ item }}</div>
+        <div
+          v-for="(item, index) in category"
+          :key="index"
+          :class="{ active: current === item }"
+          @click="changCategory(item)"
+        >
+          {{ item }}
+        </div>
       </div>
       <div class="g-right">
         <div class="green" v-for="(item, index) in foodlist" :key="index">
-          <img :src="item.image" />
+          <img :src="item.image" @click="viewImage(item.image)" />
           <div class="discribe">
             <div class="d-1">{{ item.name }}</div>
             <div class="d-bot">
@@ -51,7 +58,7 @@
                 <span>{{ item.price }}</span>
                 <span class="des-1">/包</span>
               </div>
-              <div class="add">＋</div>
+              <div class="add" @click="addCart(item)">＋</div>
             </div>
           </div>
         </div>
@@ -60,6 +67,7 @@
     <div class="footer">
       <div class="buyBox" @click="showProducts">
         <i class="iconfont icon-gouwuche"></i>
+        <div class="round">2</div>
       </div>
       <div class="product">未选购商品</div>
       <div class="finish" @click="toPay">选好了</div>
@@ -113,12 +121,16 @@ export default {
       category: null,
       foodlist: [],
       recommendList: [],
+      current: "纸巾",
+      allData: [],
+      cartData: [],
     };
   },
   created() {
     request.get("http://150.158.166.35/api/foods/").then((res) => {
       // console.log(res);
       let data = res.data;
+      this.allData = data;
       console.log("data", data);
       // 获取大类数据
       let ca = data.map((i) => {
@@ -126,8 +138,8 @@ export default {
       });
       console.log("ca", ca);
       let allCa = [...new Set(ca)];
-      console.log("allCa", allCa);
       this.category = allCa;
+      console.log("this.category", this.category);
       // 获取纸巾大类下面所以商品
       this.foodlist = data.filter((i) => {
         return i.category === "纸巾";
@@ -155,6 +167,34 @@ export default {
     },
     toPay() {
       this.$router.push("/submitOrder");
+    },
+    changCategory(item) {
+      this.current = item;
+      this.foodlist = this.allData.filter((i) => {
+        return i.category === item;
+      });
+    },
+    addCart(item) {
+      /**
+       * {
+       *  name:'',
+       *  totalPrice:'',
+       *  number:''
+       * }
+       */
+      console.log("item", item);
+      const exist = this.cartData.find((i) => i.name === item.name);
+      if (!exist) {
+        this.cartData.push({
+          name: item.name,
+          totalPrice: 1 * item.price,
+          number: 1,
+        });
+      } else {
+        exist.number += 1;
+        exist.totalPrice = exist.number * item.price;
+      }
+      console.log("this.cartData", this.cartData);
     },
   },
 };
@@ -337,7 +377,6 @@ export default {
     width: 90%;
     height: $h;
     background-color: #3b363a;
-    overflow: hidden;
     border-radius: 50px;
     display: flex;
     align-items: center;
@@ -345,6 +384,7 @@ export default {
       color: #fff;
     }
     .buyBox {
+      position: relative;
       width: $h;
       height: $h;
       border-radius: 50px;
@@ -355,6 +395,19 @@ export default {
         color: #fff;
         font-size: 25px;
         font-weight: 700;
+      }
+      .round {
+        position: absolute;
+        top: -4px;
+        right: -6px;
+        width: 17px;
+        height: 17px;
+        text-align: center;
+        line-height: 17px;
+        color: #fff;
+        border-radius: 50%;
+        border: 1px solid #fff;
+        background-color: #fa6e49;
       }
     }
     .product {
