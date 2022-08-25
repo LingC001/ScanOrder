@@ -67,7 +67,7 @@
     <div class="footer">
       <div class="buyBox" @click="showProducts">
         <i class="iconfont icon-gouwuche"></i>
-        <div class="round">2</div>
+        <div class="round">{{ allFoodsNumber }}</div>
       </div>
       <div class="product">未选购商品</div>
       <div class="finish" @click="toPay">选好了</div>
@@ -125,6 +125,15 @@ export default {
       allData: [],
       cartData: [],
     };
+  },
+  computed: {
+    allFoodsNumber() {
+      let allNumber = 0;
+      this.cartData.forEach((i) => {
+        allNumber += i.number;
+      });
+      return allNumber;
+    },
   },
   created() {
     request.get("http://150.158.166.35/api/foods/").then((res) => {
