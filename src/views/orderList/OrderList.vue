@@ -2,41 +2,80 @@
   <div class="orderList">
     <div class="header">
       <i class="iconfont icon-zuojiantou_huaban" @click="back"></i>
-      <span>提交订单</span>
+      <span>订单列表</span>
     </div>
-    <div class="body" @click="payed">
+    <div
+      class="body"
+      @click="payed(item._id)"
+      v-for="(item, index) in orderList"
+      :key="index"
+    >
       <div class="name">
         <span>小民大排档（软件园店）</span>
-        <span class="finish">订单已完成</span>
+        <span class="finish">{{ item.finished | orderStatus }}</span>
       </div>
       <div class="num">
-        <span class="dish">菜品数量：共两件菜品</span>
-        <span>￥24</span>
+        <span class="dish">菜品数量：共{{ item.allFoodsNumber }}件菜品</span>
+        <span>￥{{ item.totalFoodsPrice }}</span>
       </div>
-      <div class="time">下单时间：2020/08/23 01:22:00</div>
-    </div>
-    <div class="body">
-      <div class="name">
-        <span>小民大排档（软件园店）</span>
-        <span class="finish">订单已完成</span>
-      </div>
-      <div class="num">
-        <span class="dish">菜品数量：共两件菜品</span>
-        <span>￥100</span>
-      </div>
-      <div class="time">下单时间：2020/08/23 01:22:00</div>
+      <div class="time">下单时间：{{ item.createdAt | orderTime }}</div>
     </div>
   </div>
 </template>
 
 <script>
+import dayjs from "dayjs";
+import { getOrderList } from "@/api/orders";
 export default {
+  filters: {
+    orderStatus(val) {
+      if (val === true) {
+        return "订单已完成";
+      } else {
+        return "订单未完成";
+      }
+    },
+    orderTime(val) {
+      return dayjs(val).format("YYYY-MM-DD HH:mm:ss");
+    },
+  },
+  data() {
+    return {
+      orderList: [],
+    };
+  },
+  created() {
+    getOrderList()
+      .then((res) => {
+        // console.log("res", res);
+        this.orderList = res.data.reverse();
+        // this.orderList.forEach((i) => {
+        //   console.log("i", i);
+        //   if (i.finished === true) {
+        //     i.finished = "订单已完成";
+        //   } else {
+        //     i.finished = "订单未完成";
+        //   }
+        // });
+        // console.log("orderlist", this.orderList);
+      })
+      .catch((err) => {
+        // eslint-disable-next-line
+        console.log("err", err);
+      });
+  },
   methods: {
-    payed() {
-      this.$router.push("/listDetail");
+    payed(id) {
+      // console.log("id", id);
+      this.$router.push({
+        path: "/listDetail",
+        query: {
+          id,
+        },
+      });
     },
     back() {
-      this.$router.back();
+      this.$router.push("/choose");
     },
   },
 };
@@ -44,7 +83,6 @@ export default {
 
 <style lang="scss" scoped>
 .orderList {
-  height: 100%;
   background-color: #f4f1f4;
   .header {
     display: flex;
@@ -85,5 +123,5 @@ export default {
     }
   }
 }
-</style>>
-
+</style>
+>

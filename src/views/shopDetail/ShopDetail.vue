@@ -24,7 +24,7 @@
       <div class="arrow-up" @click="back"><van-icon name="arrow-up" /></div>
     </div>
   </div>
-</template> 
+</template>
 
 <script>
 export default {

@@ -55,6 +55,7 @@
 
 <script>
 import { mapGetters, mapMutations, mapState } from "vuex";
+import { createOrder } from "@/api/orders.js";
 export default {
   data() {
     return {
@@ -74,15 +75,24 @@ export default {
     },
   },
   created() {
-    console.log("cartData", this.cartData);
+    // console.log("cartData", this.cartData);
   },
   methods: {
-    ...mapMutations(["confirmComment"]),
+    ...mapMutations(["confirmComment", "clearCart"]),
     toPay() {
       // 調用支付，將訂單數據傳過去
-      console.log("orderData", this.orderData);
-
-      // this.$router.push("/orderList");
+      // console.log("orderData", this.orderData);
+      // let data = this.orderData;
+      createOrder(this.orderData)
+        .then(() => {
+          this.clearCart();
+          this.$router.push("/orderList");
+        })
+        .catch((err) => {
+          // eslint-disable-next-line
+          console.log("err", err);
+          this.$toast("出错了");
+        });
     },
     back() {
       this.$router.back();
@@ -195,5 +205,5 @@ export default {
     }
   }
 }
-</style>>
-
+</style>
+>

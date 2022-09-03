@@ -6,54 +6,40 @@
       <i class="iconfont icon-dingdan"></i>
     </div>
     <div class="pay">
-      <div class="paying">已支付</div>
+      <div class="paying">{{ orderData.finished | orderStatus }}</div>
       <div class="payed">付款后即可享受美味</div>
     </div>
     <div class="body">
-      <div class="paying">待支付￥117</div>
+      <div class="paying" v-if="!orderData.finished">
+        待支付￥{{ orderData.totalFoodsPrice }}
+      </div>
       <div class="goods">
-        <div class="container">
-          <img src="@/assets/images/foods/tissue.png" alt="" />
+        <div
+          class="container"
+          v-for="(item, index) in orderData.cartData"
+          :key="index"
+        >
+          <img :src="item.image" alt="" />
           <div class="wrap">
             <div class="info">
-              <span>纸巾</span>
-              <span>￥1.00</span>
+              <span>{{ item.name }}</span>
+              <span>￥{{ item.totalPrice }}</span>
             </div>
-            <div class="num">数量：1</div>
-          </div>
-        </div>
-        <div class="container">
-          <img src="@/assets/images/foods/tissue.png" alt="" />
-          <div class="wrap">
-            <div class="info">
-              <span>纸巾</span>
-              <span>￥1.00</span>
-            </div>
-            <div class="num">数量：1</div>
-          </div>
-        </div>
-        <div class="container">
-          <img src="@/assets/images/foods/tissue.png" alt="" />
-          <div class="wrap">
-            <div class="info">
-              <span>纸巾</span>
-              <span>￥1.00</span>
-            </div>
-            <div class="num">数量：1</div>
+            <div class="num">数量：{{ item.number }}</div>
           </div>
         </div>
         <div class="count">
-          <span class="num">共3份</span>
+          <span class="num">共{{ orderData.allFoodsNumber }}份</span>
           小计￥
-          <span class="price">117.00</span>
+          <span class="price">{{ orderData.totalFoodsPrice }}</span>
         </div>
       </div>
     </div>
     <div class="info-box">
       <div>订单信息</div>
-      <div class="order">订单编号：123456789</div>
-      <div class="order">下单时间：2020/08/23 2:32:00</div>
-      <div class="order">桌台名称：31</div>
+      <div class="order">订单编号：{{ orderData._id }}</div>
+      <div class="order">下单时间：{{ orderData.createdAt | orderTime }}</div>
+      <div class="order">桌台名称：{{ orderData.tableNumber }}</div>
       <div class="tip">
         <i class="iconfont icon-zhuyi"></i>
         商家设置了金额零头处理，如有疑问咨询客服。
@@ -63,7 +49,42 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
+import { getOrderDetail } from "@/api/orders";
 export default {
+  filters: {
+    orderStatus(val) {
+      if (val === true) {
+        return "已支付";
+      } else {
+        return "未支付";
+      }
+    },
+    orderTime(val) {
+      return dayjs(val).format("YYYY-MM-DD HH:mm:ss");
+    },
+  },
+  data() {
+    return {
+      orderData: {},
+    };
+  },
+  created() {
+    // console.log("route", this.$route);
+    // 对象的解构赋值
+    const { id } = this.$route.query;
+    // console.log("id", id);
+    getOrderDetail(id)
+      .then((res) => {
+        // console.log("res", res);
+        this.orderData = res.data;
+        // console.log("this.orderData", this.orderData);
+      })
+      .catch((err) => {
+        // eslint-disable-next-line
+        console.log("err", err);
+      });
+  },
   methods: {
     back() {
       this.$router.back();
@@ -181,4 +202,5 @@ export default {
     }
   }
 }
-</style>>
+</style>
+>

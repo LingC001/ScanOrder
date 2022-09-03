@@ -7,7 +7,7 @@
       </div>
       <div class="h-right">
         <van-icon name="search" />
-        <div class="iconfont icon-dingdan"></div>
+        <div class="iconfont icon-dingdan" @click="toOrderList"></div>
       </div>
     </div>
     <div class="shop-Name">
@@ -99,8 +99,8 @@
 
 <script>
 import { ImagePreview } from "vant";
-import request from "@/utils/axios.js";
 import { mapGetters, mapMutations, mapState } from "vuex";
+import { getFoods } from "@/api/foods";
 
 export default {
   data() {
@@ -119,37 +119,32 @@ export default {
   },
   watch: {
     cartData(val) {
-      console.log("val", val);
+      // console.log("val", val);
       if (val.length === 0) {
         this.ifProductDetail = false;
       }
     },
   },
   created() {
-    console.log("cartData", this.cartData);
-    request.get("http://150.158.166.35/api/foods/").then((res) => {
-      // console.log(res);
+    // console.log("cartData", this.cartData);
+    getFoods().then((res) => {
       let data = res.data;
       this.allData = data;
-      console.log("data", data);
+      // console.log("data", data);
       // 获取大类数据
       let ca = data.map((i) => {
         return i.category;
       });
-      console.log("ca", ca);
       let allCa = [...new Set(ca)];
       this.category = allCa;
-      console.log("this.category", this.category);
       // 获取纸巾大类下面所以商品
       this.foodlist = data.filter((i) => {
         return i.category === "纸巾";
       });
-      console.log("this.foodlist", this.foodlist);
       // 获取推荐商品
       this.recommendList = data.filter((i) => {
-        return i.recommended === "true";
+        return i.recommended === true;
       });
-      console.log("this.recommendList", this.recommendList);
     });
   },
   methods: {
@@ -176,6 +171,9 @@ export default {
       this.foodlist = this.allData.filter((i) => {
         return i.category === item;
       });
+    },
+    toOrderList() {
+      this.$router.push("/");
     },
   },
 };

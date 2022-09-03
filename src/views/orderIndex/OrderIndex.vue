@@ -58,7 +58,6 @@ export default {
   },
   methods: {
     selectChange(current) {
-      console.log("点击了", current);
       this.numList = this.numList.map((i) => {
         if (i.num === current) {
           i.isActive = true;
@@ -75,7 +74,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang="scss" scoped>
 $m-color1: #fd6836;
 $m-color2: #fc9904;
 @mixin test {

@@ -8,5 +8,4 @@ const instance = axios.create();
 // 现在，所有使用此实例的请求都将等待2.5秒，然后才会超时
 instance.defaults.timeout = 2500;
 
-
-export default instance
+export default instance;
