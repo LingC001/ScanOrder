@@ -9,7 +9,7 @@
 
     <div class="c-Num">
       <h5>客官，您几位？</h5>
-      <p>桌号：31</p>
+      <p>桌号：3111</p>
       <ul>
         <li
           v-for="(item, index) in numList"

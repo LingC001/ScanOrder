@@ -69,40 +69,27 @@
         <i class="iconfont icon-gouwuche"></i>
         <div class="round">{{ allFoodsNumber }}</div>
       </div>
-      <div class="product">未选购商品</div>
-      <div class="finish" @click="toPay">选好了</div>
+      <div class="product" v-show="allFoodsNumber === 0">未选购商品</div>
+      <div style="color: #fff; margin-left: 20px" v-show="allFoodsNumber > 0">
+        ￥{{ totalFoodsPrice }}
+      </div>
+      <div class="finish" v-show="allFoodsNumber > 0" @click="toPay">
+        选好了
+      </div>
     </div>
     <div class="b-frame" v-show="ifProductDetail">
       <div class="top">
-        <span>已选三份</span>
-        <i class="iconfont icon-shanchu"></i>
+        <span>已选{{ allFoodsNumber }}份</span>
+        <i class="iconfont icon-shanchu" @click="clearCart"></i>
       </div>
       <div class="body">
-        <div class="order">
-          <span>纸巾</span>
-          <span class="price">￥1</span>
+        <div class="order" v-for="(item, index) in cartData" :key="index">
+          <span>{{ item.name }}</span>
+          <span class="price">￥{{ item.totalPrice }}</span>
           <span class="num">
-            <span class="minus">－</span>
-            <span>1</span>
-            <span class="add">＋</span>
-          </span>
-        </div>
-        <div class="order">
-          <span>周黑鸭</span>
-          <span class="price">￥45</span>
-          <span class="num">
-            <span class="minus">－</span>
-            <span>1</span>
-            <span class="add">＋</span>
-          </span>
-        </div>
-        <div class="order">
-          <span>招牌凤爪</span>
-          <span class="price">￥55</span>
-          <span class="num">
-            <span class="minus">－</span>
-            <span>1</span>
-            <span class="add">＋</span>
+            <span class="minus" @click="minusNum(item)">－</span>
+            <span>{{ item.number }}</span>
+            <span class="add" @click="addNum(item)">＋</span>
           </span>
         </div>
       </div>
@@ -113,6 +100,7 @@
 <script>
 import { ImagePreview } from "vant";
 import request from "@/utils/axios.js";
+import { mapGetters, mapMutations, mapState } from "vuex";
 
 export default {
   data() {
@@ -123,19 +111,22 @@ export default {
       recommendList: [],
       current: "纸巾",
       allData: [],
-      cartData: [],
     };
   },
   computed: {
-    allFoodsNumber() {
-      let allNumber = 0;
-      this.cartData.forEach((i) => {
-        allNumber += i.number;
-      });
-      return allNumber;
+    ...mapState(["cartData"]),
+    ...mapGetters(["totalFoodsPrice", "allFoodsNumber"]),
+  },
+  watch: {
+    cartData(val) {
+      console.log("val", val);
+      if (val.length === 0) {
+        this.ifProductDetail = false;
+      }
     },
   },
   created() {
+    console.log("cartData", this.cartData);
     request.get("http://150.158.166.35/api/foods/").then((res) => {
       // console.log(res);
       let data = res.data;
@@ -162,6 +153,7 @@ export default {
     });
   },
   methods: {
+    ...mapMutations(["addCart", "clearCart", "minusNum", "addNum"]),
     toShopDetail() {
       this.$router.push("/shopDetail");
     },
@@ -172,7 +164,9 @@ export default {
       });
     },
     showProducts() {
-      this.ifProductDetail = !this.ifProductDetail;
+      if (this.allFoodsNumber > 0) {
+        this.ifProductDetail = !this.ifProductDetail;
+      }
     },
     toPay() {
       this.$router.push("/submitOrder");
@@ -182,28 +176,6 @@ export default {
       this.foodlist = this.allData.filter((i) => {
         return i.category === item;
       });
-    },
-    addCart(item) {
-      /**
-       * {
-       *  name:'',
-       *  totalPrice:'',
-       *  number:''
-       * }
-       */
-      console.log("item", item);
-      const exist = this.cartData.find((i) => i.name === item.name);
-      if (!exist) {
-        this.cartData.push({
-          name: item.name,
-          totalPrice: 1 * item.price,
-          number: 1,
-        });
-      } else {
-        exist.number += 1;
-        exist.totalPrice = exist.number * item.price;
-      }
-      console.log("this.cartData", this.cartData);
     },
   },
 };
@@ -378,6 +350,7 @@ export default {
     }
   }
   .footer {
+    position: relative;
     $h: 45px;
     position: fixed;
     left: 50%;
@@ -390,7 +363,16 @@ export default {
     display: flex;
     align-items: center;
     .finish {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      height: 100%;
+      width: 120px;
+      line-height: $h;
+      text-align: center;
       color: #fff;
+      background-color: #fa6e49;
+      border-radius: 0 100px 100px 0;
     }
     .buyBox {
       position: relative;

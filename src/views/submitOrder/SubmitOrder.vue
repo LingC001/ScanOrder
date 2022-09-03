@@ -7,61 +7,88 @@
     </div>
     <div class="body">
       <div class="goods">
-        <div class="container">
-          <img src="@/assets/images/foods/tissue.png" alt="" />
+        <div class="container" v-for="(item, index) in cartData" :key="index">
+          <img :src="item.image" alt="" />
           <div class="wrap">
             <div class="info">
-              <span>纸巾</span>
-              <span>￥1.00</span>
+              <span>{{ item.name }}</span>
+              <span>￥{{ item.totalPrice }}</span>
             </div>
-            <div class="num">数量：1</div>
-          </div>
-        </div>
-        <div class="container">
-          <img src="@/assets/images/foods/tissue.png" alt="" />
-          <div class="wrap">
-            <div class="info">
-              <span>纸巾</span>
-              <span>￥1.00</span>
-            </div>
-            <div class="num">数量：1</div>
-          </div>
-        </div>
-        <div class="container">
-          <img src="@/assets/images/foods/tissue.png" alt="" />
-          <div class="wrap">
-            <div class="info">
-              <span>纸巾</span>
-              <span>￥1.00</span>
-            </div>
-            <div class="num">数量：1</div>
+            <div class="num">数量：{{ item.number }}</div>
           </div>
         </div>
         <div class="count">
           小计：￥
-          <span>117.00</span>
+          <span>{{ totalFoodsPrice }}</span>
         </div>
       </div>
     </div>
-    <div class="footer">
+    <div class="footer" @click="showCommentBox">
       <div>备注</div>
       <i class="iconfont icon-web__jiantou_you"></i>
     </div>
     <div class="bottom">
-      <span class="price">￥<span class="pri">117.00</span></span>
+      <span class="price"
+        >￥<span class="pri">{{ totalFoodsPrice }}</span></span
+      >
       <div class="pay" @click="toPay">支付并下单</div>
     </div>
+    <van-dialog
+      v-model="dialogShow"
+      title="备注"
+      show-cancel-button
+      @confirm="confirmComment(comment)"
+      @cancel="confirmComment('')"
+    >
+      <van-field
+        v-model="comment"
+        rows="2"
+        autosize
+        type="textarea"
+        maxlength="50"
+        placeholder="请输入备注"
+        show-word-limit
+      />
+    </van-dialog>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapMutations, mapState } from "vuex";
 export default {
+  data() {
+    return {
+      dialogShow: false,
+    };
+  },
+  computed: {
+    ...mapState(["cartData", "comment"]),
+    ...mapGetters(["totalFoodsPrice", "orderData"]),
+    comment: {
+      get() {
+        return this.orderData.comment;
+      },
+      set(val) {
+        this.confirmComment(val);
+      },
+    },
+  },
+  created() {
+    console.log("cartData", this.cartData);
+  },
   methods: {
+    ...mapMutations(["confirmComment"]),
     toPay() {
-      this.$router.push("/orderList");
+      // 調用支付，將訂單數據傳過去
+      console.log("orderData", this.orderData);
+
+      // this.$router.push("/orderList");
     },
     back() {
       this.$router.back();
+    },
+    showCommentBox() {
+      this.dialogShow = true;
     },
   },
 };
