@@ -8,6 +8,7 @@ export function createOrder(data) {
 export function getOrderList() {
   return axios.get(`${apiUrl}orders/`);
 }
+
 export function getOrderDetail(id) {
   return axios.get(`${apiUrl}orders/getDetail`, {
     params: {
