@@ -26,6 +26,10 @@ const routes = [
     path: "/upload",
     component: () => import("@/views/upload"),
   },
+  {
+    path: "/upload2",
+    component: () => import("@/views/upload2"),
+  },
 ];
 
 const router = new VueRouter({

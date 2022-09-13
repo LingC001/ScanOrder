@@ -1,21 +1,22 @@
 <template>
-  <div class="upload">
+  <div class="upload2">
     <van-form @submit="onSubmit">
       <van-field
         v-model="category"
         name="category"
-        label="种类"
-        placeholder="种类"
-        :rules="[{ required: true, message: '请填写种类' }]"
-      ></van-field>
+        label="分类"
+        placeholder="分类"
+        :rules="[{ required: true, message: '请填写分类' }]"
+      />
       <van-field
         v-model="name"
+        type="text"
         name="name"
         label="名称"
         placeholder="名称"
         :rules="[{ required: true, message: '请填写名称' }]"
-      ></van-field>
-      <van-field name="pic" label="图片">
+      />
+      <van-field name="pic" label="文件上传">
         <template #input>
           <van-uploader v-model="pic" :max-count="1" />
         </template>
@@ -27,14 +28,15 @@
         label="价格"
         placeholder="价格"
         :rules="[{ required: true, message: '请填写价格' }]"
-      ></van-field>
+      />
       <van-field
         v-model="description"
+        type="text"
         name="description"
         label="描述"
         placeholder="描述"
         :rules="[{ required: true, message: '请填写描述' }]"
-      ></van-field>
+      />
       <van-field name="recommended" label="是否推荐">
         <template #input>
           <van-switch v-model="recommended" size="20" />
@@ -51,9 +53,7 @@
 
 <script>
 import { addFood } from "@/api/foods";
-
 export default {
-  name: "upload",
   data() {
     return {
       category: "",
@@ -61,21 +61,35 @@ export default {
       pic: [],
       price: "",
       description: "",
-      recommended: "",
+      recommended: false,
     };
   },
   methods: {
     onSubmit(values) {
-      // console.log("values", values);
-      values.pic = values.pic[0]["file"];
+      console.log("values", values);
       let formData = new FormData();
+      // formData.append("category", this.category);
+      // formData.append("name", this.name);
+      // formData.append("pic", this.pic[0].file);
+      // formData.append("price", this.price);
+      // formData.append("description", this.description);
+      // formData.append("recommended", this.recommended);
+
+      values.pic = values.pic[0]["file"];
       for (let i in values) {
         formData.append(i, values[i]);
       }
-      addFood(formData);
+      console.log("formData", formData);
+      addFood(formData)
+        .then((res) => {
+          console.log("res", res);
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style></style>
